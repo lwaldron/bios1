@@ -1,0 +1,39 @@
+---
+title: "Cancer Death vs Poverty by County in US"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Cancer Death vs Poverty by County in US}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width=6,
+  fig.height=6
+)
+```
+
+```{r setup}
+suppressPackageStartupMessages(library(tidyverse))
+```
+
+# Load data
+
+Read directly from [this URL](https://raw.githubusercontent.com/Arnab777as3uj/STAT6021-Cancer-Prediction-Project/master/cancer_reg.csv) then rename one column.
+
+```{r}
+cancer_reg <- readr::read_csv("https://raw.githubusercontent.com/Arnab777as3uj/STAT6021-Cancer-Prediction-Project/master/cancer_reg.csv")
+cancer_reg <- dplyr::rename(cancer_reg, "cancer_death_rate" = "TARGET_deathRate")
+```
+
+```{r}
+ggplot(cancer_reg, aes(x = povertyPercent, y = cancer_death_rate)) +
+  geom_point(alpha = 0.25) +
+  xlab("Poverty Percentage") +
+  ylab("Cancer Death Rate") +
+  ggtitle("Cancer Death vs Poverty by County in US")
+```
+

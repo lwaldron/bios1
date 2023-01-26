@@ -1,0 +1,17 @@
+Package: bios1
+Title: Code for CUNY Biostatistics I
+Version: 0.0.0.9000
+Authors@R: 
+    c(person("Levi", "Waldron", role = c("aut", "cre"), 
+             email = "levi.waldron@sph.cuny.edu"),
+      person("Zach", "Shahn", role = "aut"),
+      person("Marcel", "Ramos", role = "aut"))
+Description: This package provides example code relevant to CUNY Biostatistics 1.
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
+License: CC0
