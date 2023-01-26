@@ -15,3 +15,4 @@ Suggests:
     rmarkdown
 VignetteBuilder: knitr
 License: CC0
+URL: https://lwaldron.github.io/bios1/
