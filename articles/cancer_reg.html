@@ -35,9 +35,6 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
-<li class="nav-item">
-  <a class="nav-link" href="../reference/index.html">Reference</a>
-</li>
 <li class="active nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
@@ -71,12 +68,13 @@
     
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">suppressPackageStartupMessages</a></span><span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
 <h2 id="load-data">Load data<a class="anchor" aria-label="anchor" href="#load-data"></a>
 </h2>
 <p>Read directly from <a href="https://raw.githubusercontent.com/Arnab777as3uj/STAT6021-Cancer-Prediction-Project/master/cancer_reg.csv" class="external-link">this
 URL</a> then rename one column.</p>
+<p>Load data:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cancer_reg</span> <span class="op">&lt;-</span> <span class="fu">readr</span><span class="fu">::</span><span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">read_csv</a></span><span class="op">(</span><span class="st">"https://raw.githubusercontent.com/Arnab777as3uj/STAT6021-Cancer-Prediction-Project/master/cancer_reg.csv"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="font-weight: bold;">Rows: </span><span style="color: #0000BB;">3047</span> <span style="font-weight: bold;">Columns: </span><span style="color: #0000BB;">34</span></span></span>
@@ -86,15 +84,93 @@ URL</a> then rename one column.</p>
 <span><span class="co">#&gt; <span style="color: #00BB00;">dbl</span> (32): avgAnnCount, avgDeathsPerYear, TARGET_deathRate, incidenceRate, me...</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Use `spec()` to retrieve the full column specification for this data.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Specify the column types or set `show_col_types = FALSE` to quiet this message.</span></span>
-<span><span class="va">cancer_reg</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span><span class="va">cancer_reg</span>, <span class="st">"cancer_death_rate"</span> <span class="op">=</span> <span class="st">"TARGET_deathRate"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Specify the column types or set `show_col_types = FALSE` to quiet this message.</span></span></code></pre></div>
+<p>See a summary:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">cancer_reg</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   avgAnnCount      avgDeathsPerYear TARGET_deathRate incidenceRate   </span></span>
+<span><span class="co">#&gt;  Min.   :    6.0   Min.   :    3    Min.   : 59.7    Min.   : 201.3  </span></span>
+<span><span class="co">#&gt;  1st Qu.:   76.0   1st Qu.:   28    1st Qu.:161.2    1st Qu.: 420.3  </span></span>
+<span><span class="co">#&gt;  Median :  171.0   Median :   61    Median :178.1    Median : 453.5  </span></span>
+<span><span class="co">#&gt;  Mean   :  606.3   Mean   :  186    Mean   :178.7    Mean   : 448.3  </span></span>
+<span><span class="co">#&gt;  3rd Qu.:  518.0   3rd Qu.:  149    3rd Qu.:195.2    3rd Qu.: 480.9  </span></span>
+<span><span class="co">#&gt;  Max.   :38150.0   Max.   :14010    Max.   :362.8    Max.   :1206.9  </span></span>
+<span><span class="co">#&gt;                                                                      </span></span>
+<span><span class="co">#&gt;    medIncome        popEst2015       povertyPercent   studyPerCap     </span></span>
+<span><span class="co">#&gt;  Min.   : 22640   Min.   :     827   Min.   : 3.20   Min.   :   0.00  </span></span>
+<span><span class="co">#&gt;  1st Qu.: 38882   1st Qu.:   11684   1st Qu.:12.15   1st Qu.:   0.00  </span></span>
+<span><span class="co">#&gt;  Median : 45207   Median :   26643   Median :15.90   Median :   0.00  </span></span>
+<span><span class="co">#&gt;  Mean   : 47063   Mean   :  102637   Mean   :16.88   Mean   : 155.40  </span></span>
+<span><span class="co">#&gt;  3rd Qu.: 52492   3rd Qu.:   68671   3rd Qu.:20.40   3rd Qu.:  83.65  </span></span>
+<span><span class="co">#&gt;  Max.   :125635   Max.   :10170292   Max.   :47.40   Max.   :9762.31  </span></span>
+<span><span class="co">#&gt;                                                                       </span></span>
+<span><span class="co">#&gt;   binnedInc           MedianAge      MedianAgeMale   MedianAgeFemale</span></span>
+<span><span class="co">#&gt;  Length:3047        Min.   : 22.30   Min.   :22.40   Min.   :22.30  </span></span>
+<span><span class="co">#&gt;  Class :character   1st Qu.: 37.70   1st Qu.:36.35   1st Qu.:39.10  </span></span>
+<span><span class="co">#&gt;  Mode  :character   Median : 41.00   Median :39.60   Median :42.40  </span></span>
+<span><span class="co">#&gt;                     Mean   : 45.27   Mean   :39.57   Mean   :42.15  </span></span>
+<span><span class="co">#&gt;                     3rd Qu.: 44.00   3rd Qu.:42.50   3rd Qu.:45.30  </span></span>
+<span><span class="co">#&gt;                     Max.   :624.00   Max.   :64.70   Max.   :65.70  </span></span>
+<span><span class="co">#&gt;                                                                     </span></span>
+<span><span class="co">#&gt;   Geography         AvgHouseholdSize PercentMarried   PctNoHS18_24  </span></span>
+<span><span class="co">#&gt;  Length:3047        Min.   :0.0221   Min.   :23.10   Min.   : 0.00  </span></span>
+<span><span class="co">#&gt;  Class :character   1st Qu.:2.3700   1st Qu.:47.75   1st Qu.:12.80  </span></span>
+<span><span class="co">#&gt;  Mode  :character   Median :2.5000   Median :52.40   Median :17.10  </span></span>
+<span><span class="co">#&gt;                     Mean   :2.4797   Mean   :51.77   Mean   :18.22  </span></span>
+<span><span class="co">#&gt;                     3rd Qu.:2.6300   3rd Qu.:56.40   3rd Qu.:22.70  </span></span>
+<span><span class="co">#&gt;                     Max.   :3.9700   Max.   :72.50   Max.   :64.10  </span></span>
+<span><span class="co">#&gt;                                                                     </span></span>
+<span><span class="co">#&gt;    PctHS18_24   PctSomeCol18_24 PctBachDeg18_24   PctHS25_Over  </span></span>
+<span><span class="co">#&gt;  Min.   : 0.0   Min.   : 7.10   Min.   : 0.000   Min.   : 7.50  </span></span>
+<span><span class="co">#&gt;  1st Qu.:29.2   1st Qu.:34.00   1st Qu.: 3.100   1st Qu.:30.40  </span></span>
+<span><span class="co">#&gt;  Median :34.7   Median :40.40   Median : 5.400   Median :35.30  </span></span>
+<span><span class="co">#&gt;  Mean   :35.0   Mean   :40.98   Mean   : 6.158   Mean   :34.80  </span></span>
+<span><span class="co">#&gt;  3rd Qu.:40.7   3rd Qu.:46.40   3rd Qu.: 8.200   3rd Qu.:39.65  </span></span>
+<span><span class="co">#&gt;  Max.   :72.5   Max.   :79.00   Max.   :51.800   Max.   :54.80  </span></span>
+<span><span class="co">#&gt;                 NA's   :2285                                    </span></span>
+<span><span class="co">#&gt;  PctBachDeg25_Over PctEmployed16_Over PctUnemployed16_Over PctPrivateCoverage</span></span>
+<span><span class="co">#&gt;  Min.   : 2.50     Min.   :17.60      Min.   : 0.400       Min.   :22.30     </span></span>
+<span><span class="co">#&gt;  1st Qu.: 9.40     1st Qu.:48.60      1st Qu.: 5.500       1st Qu.:57.20     </span></span>
+<span><span class="co">#&gt;  Median :12.30     Median :54.50      Median : 7.600       Median :65.10     </span></span>
+<span><span class="co">#&gt;  Mean   :13.28     Mean   :54.15      Mean   : 7.852       Mean   :64.35     </span></span>
+<span><span class="co">#&gt;  3rd Qu.:16.10     3rd Qu.:60.30      3rd Qu.: 9.700       3rd Qu.:72.10     </span></span>
+<span><span class="co">#&gt;  Max.   :42.20     Max.   :80.10      Max.   :29.400       Max.   :92.30     </span></span>
+<span><span class="co">#&gt;                    NA's   :152                                               </span></span>
+<span><span class="co">#&gt;  PctPrivateCoverageAlone PctEmpPrivCoverage PctPublicCoverage</span></span>
+<span><span class="co">#&gt;  Min.   :15.70           Min.   :13.5       Min.   :11.20    </span></span>
+<span><span class="co">#&gt;  1st Qu.:41.00           1st Qu.:34.5       1st Qu.:30.90    </span></span>
+<span><span class="co">#&gt;  Median :48.70           Median :41.1       Median :36.30    </span></span>
+<span><span class="co">#&gt;  Mean   :48.45           Mean   :41.2       Mean   :36.25    </span></span>
+<span><span class="co">#&gt;  3rd Qu.:55.60           3rd Qu.:47.7       3rd Qu.:41.55    </span></span>
+<span><span class="co">#&gt;  Max.   :78.90           Max.   :70.7       Max.   :65.10    </span></span>
+<span><span class="co">#&gt;  NA's   :609                                                 </span></span>
+<span><span class="co">#&gt;  PctPublicCoverageAlone    PctWhite         PctBlack          PctAsian      </span></span>
+<span><span class="co">#&gt;  Min.   : 2.60          Min.   : 10.20   Min.   : 0.0000   Min.   : 0.0000  </span></span>
+<span><span class="co">#&gt;  1st Qu.:14.85          1st Qu.: 77.30   1st Qu.: 0.6207   1st Qu.: 0.2542  </span></span>
+<span><span class="co">#&gt;  Median :18.80          Median : 90.06   Median : 2.2476   Median : 0.5498  </span></span>
+<span><span class="co">#&gt;  Mean   :19.24          Mean   : 83.65   Mean   : 9.1080   Mean   : 1.2540  </span></span>
+<span><span class="co">#&gt;  3rd Qu.:23.10          3rd Qu.: 95.45   3rd Qu.:10.5097   3rd Qu.: 1.2210  </span></span>
+<span><span class="co">#&gt;  Max.   :46.60          Max.   :100.00   Max.   :85.9478   Max.   :42.6194  </span></span>
+<span><span class="co">#&gt;                                                                             </span></span>
+<span><span class="co">#&gt;   PctOtherRace     PctMarriedHouseholds   BirthRate     </span></span>
+<span><span class="co">#&gt;  Min.   : 0.0000   Min.   :22.99        Min.   : 0.000  </span></span>
+<span><span class="co">#&gt;  1st Qu.: 0.2952   1st Qu.:47.76        1st Qu.: 4.521  </span></span>
+<span><span class="co">#&gt;  Median : 0.8262   Median :51.67        Median : 5.381  </span></span>
+<span><span class="co">#&gt;  Mean   : 1.9835   Mean   :51.24        Mean   : 5.640  </span></span>
+<span><span class="co">#&gt;  3rd Qu.: 2.1780   3rd Qu.:55.40        3rd Qu.: 6.494  </span></span>
+<span><span class="co">#&gt;  Max.   :41.9303   Max.   :78.08        Max.   :21.326  </span></span>
+<span><span class="co">#&gt; </span></span></code></pre></div>
+<p>Rename the “TARGET_deathRate” column to “cancer_death_rate”:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">cancer_reg</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span><span class="va">cancer_reg</span>, <span class="st">"cancer_death_rate"</span> <span class="op">=</span> <span class="st">"TARGET_deathRate"</span><span class="op">)</span></span></code></pre></div>
+<p>Make scatter plot, giving points alpha=25% opacity:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">cancer_reg</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">povertyPercent</span>, y <span class="op">=</span> <span class="va">cancer_death_rate</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">0.25</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="st">"Poverty Percentage"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"Cancer Death Rate"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Cancer Death vs Poverty by County in US"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="cancer_reg_files/figure-html/unnamed-chunk-3-1.png" width="576"></p>
+<p><img src="cancer_reg_files/figure-html/unnamed-chunk-5-1.png" width="576"></p>
 </div>
   </main>
 </div>
