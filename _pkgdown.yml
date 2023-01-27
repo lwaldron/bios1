@@ -1,4 +1,7 @@
 url: https://lwaldron.github.io/bios1/
 template:
   bootstrap: 5
-
+navbar:
+  structure:
+    left:  [intro, articles, tutorials, news]
+    right: [search, github]

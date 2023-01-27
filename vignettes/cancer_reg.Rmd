@@ -16,19 +16,30 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
-suppressPackageStartupMessages(library(tidyverse))
+```{r setup, message=FALSE}
+library(tidyverse)
 ```
 
 # Load data
 
 Read directly from [this URL](https://raw.githubusercontent.com/Arnab777as3uj/STAT6021-Cancer-Prediction-Project/master/cancer_reg.csv) then rename one column.
 
+Load data:
 ```{r}
 cancer_reg <- readr::read_csv("https://raw.githubusercontent.com/Arnab777as3uj/STAT6021-Cancer-Prediction-Project/master/cancer_reg.csv")
+```
+
+See a summary:
+```{r}
+summary(cancer_reg)
+```
+
+Rename the "TARGET_deathRate" column to "cancer_death_rate":
+```{r}
 cancer_reg <- dplyr::rename(cancer_reg, "cancer_death_rate" = "TARGET_deathRate")
 ```
 
+Make scatter plot, giving points alpha=25% opacity:
 ```{r}
 ggplot(cancer_reg, aes(x = povertyPercent, y = cancer_death_rate)) +
   geom_point(alpha = 0.25) +
