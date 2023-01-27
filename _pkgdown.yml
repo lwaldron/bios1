@@ -5,3 +5,9 @@ navbar:
   structure:
     left:  [intro, articles, tutorials, news]
     right: [search, github]
+home:
+  sidebar:
+    structure: [links, license, community, authors, dev]
+  links:
+  - text: Source repository
+    href: https://github.com/lwaldron/bios1

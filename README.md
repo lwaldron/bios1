@@ -1,6 +1,6 @@
 # Code for CUNY SPH Applied Biostatistics I
 
-This repository provides code for lectures, labs, etc. See: 
-
-* <https://lwaldron.github.io/bios1/> for compiled html versions of code found in the "vignettes" directory.
-* <https://github.com/lwaldron/bios1> for source GitHub repository.
+This repository provides code for lectures, labs, etc for CUNY SPH Applied 
+Biostatistics I. There is a [source GitHub repository](https://github.com/lwaldron/bios1)
+and [this website](https://lwaldron.github.io/bios1/) where the "articles" in the 
+vignettes directory are shown in compiled form.
