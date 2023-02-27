@@ -1,0 +1,85 @@
+---
+title: "Standardization simplified"
+author: "Levi Waldron"
+date: "`r Sys.Date()`"
+output: 
+  html_document: 
+    toc: yes
+    number_sections: yes
+---
+
+# Simulate some data
+
+Here we simulate a sample of 20 participants with observations on:
+* _sex_ (M or F)
+* _height_ in cm (from a random normal distribution with mean 180cm and standard 
+deviation 10 cm), plus 5cm for males
+
+```{r}
+set.seed(1)
+df <- data.frame(
+  sex = c(rep("M", 10), rep("F", 10)),
+  group = sample(c(rep("trt", 10), rep("placebo", 10)), size = 20, replace = FALSE)
+)
+df$height = rnorm(20, mean = 180, sd = 10) + ifelse(df$sex == "M", 5, 0)
+df$weight <-
+  df$height * 0.2 + ifelse(df$sex == "M", 5, 0) - ifelse(df$group == "trt", 2, 0) + rnorm(20)
+```
+
+# Estimate the effect of treatment using regression
+
+```{r}
+mod <- lm(weight ~ height + sex + group, data = df)
+summary(mod)
+```
+# Estimate the effect of treatment using standardization
+
+Need to create new datasets where everyone was treated, or everyone received
+placebo.
+
+```{r}
+newdatatrt <- df
+newdatatrt$group <- "trt" #everyone treated
+newdataplacebo <- df
+newdataplacebo$group <- "placebo" #everyone placebo
+```
+
+What would the average weight be if everyone received treatment?
+
+```{r}
+(trtmean <- mean(predict(mod, newdata = newdatatrt)))
+```
+
+What would the average weight be if everyone received placebo?
+
+```{r}
+(placebomean <- mean(predict(mod, newdata = newdataplacebo)))
+```
+
+What is the causal effect of treatment compared to placebo in this sample?
+
+```{r}
+trtmean - placebomean
+```
+
+How does this compare to the estimate from the regression table? It's THE SAME.
+But if there were any interactions with treatment, we would not find the standardized
+mean treatment effect anywhere in the table of regression coefficients.
+
+Example: if the treatment had a different effect on males than on females, the
+regression table would only show the effect for the reference sex. You could add
+the coefficient of the interaction term with sex to get the effect of treatment on
+the non-reference sex. The standardized effect would be the average effect on
+the composition of males and females found in this sample. The average treatment
+effect could be recalculated for any other composition of males and females. 
+
+# Why standardization then?
+
+1. If there were interactions with treatment, then the effect of treatment from the
+regression output would only be for the reference group, it would not be an average
+treatment effect for the sample.
+
+2. We can standardize to different samples or to the population, where the distribution
+of covariates is different than in our sample, even in the presence of interactions.
+
+3. Standardization is easily amenable to bootstrap simulation to estimate confidence intervals.
