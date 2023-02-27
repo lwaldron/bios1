@@ -14,22 +14,23 @@ Here we simulate a sample of 20 participants with observations on:
 * _sex_ (M or F)
 * _height_ in cm (from a random normal distribution with mean 180cm and standard 
 deviation 10 cm), plus 5cm for males
+* _weight_ is the outcome variable, equal to `0.2 * height`, minus 2 for the treatment
+group, plus some noise with standard deviation equal to 1 (`N(0, 1)`)
 
 ```{r}
 set.seed(1)
 df <- data.frame(
   sex = c(rep("M", 10), rep("F", 10)),
-  group = sample(c(rep("trt", 10), rep("placebo", 10)), size = 20, replace = FALSE)
+  group = sample(c(rep("trt", 10), rep("placebo", 10)))
 )
 df$height = rnorm(20, mean = 180, sd = 10) + ifelse(df$sex == "M", 5, 0)
-df$weight <-
-  df$height * 0.2 + ifelse(df$sex == "M", 5, 0) - ifelse(df$group == "trt", 2, 0) + rnorm(20)
+df$weight = df$height * 0.2 - ifelse(df$group == "trt", 2, 0) + rnorm(20)
 ```
 
 # Estimate the effect of treatment using regression
 
 ```{r}
-mod <- lm(weight ~ height + sex + group, data = df)
+mod <- lm(weight ~ group + height + sex, data = df)
 summary(mod)
 ```
 # Estimate the effect of treatment using standardization
@@ -61,6 +62,8 @@ What is the causal effect of treatment compared to placebo in this sample?
 ```{r}
 trtmean - placebomean
 ```
+
+# Discussion
 
 How does this compare to the estimate from the regression table? It's THE SAME.
 But if there were any interactions with treatment, we would not find the standardized
