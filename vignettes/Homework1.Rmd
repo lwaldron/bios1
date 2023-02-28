@@ -1,0 +1,70 @@
+---
+title: "BIOS 1 - Homework 1"
+output: html_notebook
+---
+
+In this homework we will use the NHEFS dataset introduced in week 4. Take a look
+at the codebook linked to from https://www.hsph.harvard.edu/miguel-hernan/causal-inference-book/.
+
+Download the dataset and import it into R. Try using the File - Import 
+Dataset - From text (readr) menu option to do this import yourself.
+
+![](images/screenshot_importdataset.png)
+
+Here is code to directly import the NHEFS dataset from the web. Note use
+of the knitr code chunk option `cache=TRUE` to cache the results locally and
+avoid downloading from the web each time you run your program.
+
+```{r, cache=TRUE}
+library(readr)
+nhefs <- read_csv("https://cdn1.sph.harvard.edu/wp-content/uploads/sites/1268/1268/20/nhefs.csv")
+```
+
+# Question 1: customizing read_csv
+
+Using help from the Import Dataset tool demonstrated above, change the above read_csv 
+command to import any factor (categorical) variables in the first 15 columns as
+factors instead of double (numeric). You don't need to recode their numeric values
+yet.
+
+# Question 2: Recoding
+
+You will use the following variables. For those that are factors, use the dplyr 
+`case_match` function to recode them to informative factor levels. 
+
+* `active`
+* `age`
+* `education`
+* `exercise`
+* `race`
+* `sex`
+* `smokeintensity`
+* `smkyrs`
+* `wt71`
+
+# Question 3: Table 1
+
+Use the `table1` package (or an alternative of your choice) to make a "Table 1"
+summarizing the above variables. Use the `table1::label` command to create
+informative labels for these variables in your table.
+
+# Question 4: draw a DAG
+
+Use http://www.dagitty.net/ to create a DAG for the following hypothesis. Use the R dagitty package to display this DAG in your document:
+
+* wt82_71 is caused by qsmk. sex, race, age, education, and exercise are hypothesized confounders.
+
+# Question 5: fit a regression model
+
+Fit the following multiple linear regression model (note that age squared is represented in model formula by I(age^2):
+
+$ wt82\_71 \sim qsmk + sex + race + age + age^2 + education + exercise $
+
+
+# Question 6: standardization
+
+Calculate the mean predicted outcomes under treatment (quitting smoking) and 
+no treatment (not quitting smoking), and calculate the difference between theses 
+to estimate the causal effect of quitting smoking on change in weight.
+
+# TO BE CONTINUED
