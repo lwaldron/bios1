@@ -1,6 +1,9 @@
 ---
 title: "BIOS 1 - Homework 1"
-output: html_notebook
+output: 
+  html_notebook: 
+    toc: yes
+    number_sections: yes
 ---
 
 In this homework we will use the NHEFS dataset introduced in week 4. Take a look
