@@ -13,6 +13,10 @@ editor_options:
     wrap: 72
 ---
 
+# Preamble and setup
+
+*Note*: The code used to create this document is [here](https://github.com/lwaldron/bios1/blob/main/vignettes/Homework1.Rmd).
+
 In this homework we will use the NHEFS dataset introduced in week 4.
 Take a look at the codebook linked to from
 <https://www.hsph.harvard.edu/miguel-hernan/causal-inference-book/>.
