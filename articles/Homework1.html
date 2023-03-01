@@ -90,19 +90,21 @@ your program.</p>
 <span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Use `spec()` to retrieve the full column specification for this data.</span></span>
 <span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Specify the column types or set `show_col_types = FALSE` to quiet this message.</span></span></code></pre>
 <div class="section level2">
-<h2 id="question-1-customizing-read_csv">Question 1: customizing read_csv<a class="anchor" aria-label="anchor" href="#question-1-customizing-read_csv"></a>
+<h2 id="question-1-customizing-read_csv">Question 1: customizing <code>read_csv</code><a class="anchor" aria-label="anchor" href="#question-1-customizing-read_csv"></a>
 </h2>
 <p>Using help from the Import Dataset tool demonstrated above, change
-the above read_csv command to import any factor (categorical) variables
-in the first 15 columns as factors instead of double (numeric). You
-don’t need to recode their numeric values yet.</p>
+the above <code>read_csv</code> command to import any factor
+(categorical) variables in the first 15 columns as factors instead of
+double (numeric). You don’t need to recode their numeric values yet.</p>
 </div>
 <div class="section level2">
-<h2 id="question-2-recoding">Question 2: Recoding<a class="anchor" aria-label="anchor" href="#question-2-recoding"></a>
+<h2 id="question-2-recoding">Question 2: recoding<a class="anchor" aria-label="anchor" href="#question-2-recoding"></a>
 </h2>
 <p>You will use the following variables. For those that are factors, use
 the dplyr <code>case_match</code> function to recode them to informative
-factor levels.</p>
+factor levels. For yes/no factors use “no” as the reference category,
+and for other factors use whichever is the most common group as the
+reference category.</p>
 <ul>
 <li><code>active</code></li>
 <li><code>age</code></li>
@@ -112,7 +114,7 @@ factor levels.</p>
 <li><code>sex</code></li>
 <li><code>smokeintensity</code></li>
 <li><code>smkyrs</code></li>
-<li><code>wt71</code></li>
+<li><code>wt82_71</code></li>
 </ul>
 </div>
 <div class="section level2">
@@ -126,33 +128,123 @@ these variables in your table.</p>
 <div class="section level2">
 <h2 id="question-4-draw-a-dag">Question 4: draw a DAG<a class="anchor" aria-label="anchor" href="#question-4-draw-a-dag"></a>
 </h2>
-<p>Use <a href="http://www.dagitty.net/" class="external-link uri">http://www.dagitty.net/</a> to create a DAG for the
+<ol style="list-style-type: lower-alpha">
+<li>Use <a href="http://www.dagitty.net/" class="external-link uri">http://www.dagitty.net/</a> to create a DAG for the
 following hypothesis. Use the R dagitty package to display this DAG in
-your document:</p>
+your document:</li>
+</ol>
 <ul>
-<li>wt82_71 is caused by qsmk. sex, race, age, education, and exercise
-are hypothesized confounders.</li>
+<li>
+<code>wt82_71</code> is caused by <code>qsmk</code> (in particular,
+that quitting smoking causes weight gain)</li>
+<li>
+<code>sex</code>, <code>race</code>, <code>age</code>,
+<code>education</code>, and <code>exercise</code> are hypothesized
+confounders.</li>
 </ul>
+<ol start="2" style="list-style-type: lower-alpha">
+<li><p>Write out in words this research hypothesis, using the meanings
+of these variables rather than just their variable names.</p></li>
+<li><p>Also write out in words the null hypothesis for statistical
+testing. Why would you have a two-sided null hypothesis even when in
+this case the research hypothesis is one-sided?</p></li>
+</ol>
 </div>
 <div class="section level2">
 <h2 id="question-5-fit-a-regression-model">Question 5: fit a regression model<a class="anchor" aria-label="anchor" href="#question-5-fit-a-regression-model"></a>
 </h2>
 <p>Fit the following multiple linear regression model (note that age
-squared is represented in model formula by I(age^2):</p>
-<p>$ wt82_71 qsmk + sex + race + age + age^2 + education + exercise
-$</p>
+squared is represented in model formula by <code>I(age^2)</code>):</p>
+<p><span class="math display">\[
+wt82\_71 \sim qsmk + sex + race + age + age^2 + education + exercise
+\]</span></p>
+<p>See <a href="https://www.oreilly.com/library/view/the-r-book/9780470510247/ch009-sec009.html" class="external-link uri">https://www.oreilly.com/library/view/the-r-book/9780470510247/ch009-sec009.html</a>
+for a convenient summary of how to use R model formulae.</p>
 </div>
 <div class="section level2">
 <h2 id="question-6-standardization">Question 6: standardization<a class="anchor" aria-label="anchor" href="#question-6-standardization"></a>
 </h2>
-<p>Calculate the mean predicted outcomes under treatment (quitting
-smoking) and no treatment (not quitting smoking), and calculate the
-difference between theses to estimate the causal effect of quitting
-smoking on change in weight.</p>
+<ol style="list-style-type: lower-alpha">
+<li>Calculate the mean predicted outcomes under treatment (quitting
+smoking) and no treatment (not quitting smoking).</li>
+<li>Calculate the difference between these to estimate the causal effect
+of quitting smoking on change in weight.</li>
+<li>Is the conditional average treatment effect that you estimated using
+standardization the same or different than the coefficient for
+<code>qsmk</code> in the table of regression coefficients?</li>
+</ol>
 </div>
 <div class="section level2">
-<h2 id="to-be-continued">TO BE CONTINUED<a class="anchor" aria-label="anchor" href="#to-be-continued"></a>
+<h2 id="question-7-dag-and-regression-with-interactions">Question 7: DAG and regression with interactions<a class="anchor" aria-label="anchor" href="#question-7-dag-and-regression-with-interactions"></a>
 </h2>
+<p>Now suppose we hypothesize that smoking intensity also impacts weight
+loss, and modifies the effect of quitting smoking on weight loss.</p>
+<ol style="list-style-type: lower-alpha">
+<li>Draw a new DAG that incorporates these hypothesized effects of
+smoking intensity.</li>
+<li>Fit a new linear regression model that includes a linear and
+quadratic term for <code>smokeintensity</code> (as above with age) and
+an interaction between <code>qsmk</code> and
+<code>smokeintensity</code>.</li>
+</ol>
+</div>
+<div class="section level2">
+<h2 id="question-8-standardization-with-interactions">Question 8: standardization with interactions<a class="anchor" aria-label="anchor" href="#question-8-standardization-with-interactions"></a>
+</h2>
+<ol style="list-style-type: lower-alpha">
+<li>Again use standardization to calculate the conditional average
+treatment effect of quitting smoking in this sample.</li>
+<li>Is this estimate the same or different than the coefficient for
+<code>qsmk</code> in the new table of regression coefficients from
+Question 7?</li>
+</ol>
+</div>
+<div class="section level2">
+<h2 id="question-9-bootstrap">Question 9: bootstrap<a class="anchor" aria-label="anchor" href="#question-9-bootstrap"></a>
+</h2>
+<ol style="list-style-type: lower-alpha">
+<li>Write a function that takes two arguments:
+<code>function(x, d)</code> where:</li>
+</ol>
+<ul>
+<li>
+<code>x</code> is a dataframe or tibble of your data</li>
+<li>
+<code>d</code> is an integer vector of row IDs that will be used to
+choose a subset of the dataframe, for example using
+<code>dplyr::filter(x, d)</code>
+</li>
+</ul>
+<p>Using the subset <code>dplyr::filter(x, d)</code>, your function
+should perform the same calculation as Question 8a, returning the
+conditional average treatment effect for the same model with the
+interaction term.</p>
+<ol start="2" style="list-style-type: lower-alpha">
+<li><p>Show the output of calling your function using
+<code>d = 1:nrow(x)</code> to confirm that this gives the same result as
+8a.</p></li>
+<li><p>Estimate a 95% bootstrap confidence interval for the conditional
+average treatment effect, using at least 1000 replications. You are
+welcome to use your favorite method to implement this bootstrap, but I
+recommend the <code>boot</code> library which is powerful and simpler to
+use than programming your own simulation.</p></li>
+<li><p>Summarize your findings. Is the effect of quitting smoking on
+weight change significant? What is the effect? Is it modified by
+baseline smoking intensity?</p></li>
+</ol>
+</div>
+<div class="section level2">
+<h2 id="question-10-what-did-those-quadratic-terms-do">Question 10: what did those quadratic terms do?<a class="anchor" aria-label="anchor" href="#question-10-what-did-those-quadratic-terms-do"></a>
+</h2>
+<p>Use the coefficients of <code>age</code> and <code>I(age)^2</code> to
+plot the conditional relationship between age and weight change for the
+participants in this study. Specifically, use the ages of the
+participants in this study to calculate</p>
+<p><span class="math display">\[
+y = \beta_{age} * age + \beta_{I(age)^2} * age^2
+\]</span> then create a scatterplot of y vs age. How did the quadratic
+term change the modeled association between age and weight change,
+compared to a linear term only?</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>
