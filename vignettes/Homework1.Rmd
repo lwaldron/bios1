@@ -3,11 +3,6 @@ title: "BIOS 1 - Homework 1"
 output:
   html_document: 
     toc: yes
-  html_notebook:
-    toc: yes
-    number_sections: yes
-  word_document:
-    toc: yes
 date: "`r Sys.Date()`"
 author: "Levi Waldron"
 editor_options:
