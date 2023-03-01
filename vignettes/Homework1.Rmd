@@ -8,12 +8,14 @@ output:
     number_sections: yes
   word_document:
     toc: yes
+date: "`r Sys.Date()`"
+author: "Levi Waldron"
 editor_options:
   markdown:
     wrap: 72
 ---
 
-# Preamble and setup
+# Source code and data for this assignment
 
 *Note*: The code used to create this document is [here](https://github.com/lwaldron/bios1/blob/main/vignettes/Homework1.Rmd).
 
