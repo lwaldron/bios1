@@ -123,9 +123,9 @@ b. Is this estimate the same or different than the coefficient for `qsmk` in the
 a. Write a function that takes two arguments: `function(x, d)` where:
 * `x` is a dataframe or tibble of your data
 * `d` is an integer vector of row IDs that will be used to choose a subset of 
-the dataframe, for example using `dplyr::filter(x, d)`
+the dataframe, for example using `dplyr::slice(x, d)`
 
-Using the subset `dplyr::filter(x, d)`, your function should perform the same calculation
+Using the subset `dplyr::slice(x, d)`, your function should perform the same calculation
 as Question 8a, returning the conditional average treatment effect for the same model
 with the interaction term.
 
