@@ -1,0 +1,170 @@
+---
+title: "Tutorial 5"
+output:
+  html_document: 
+    toc: yes
+date: "`r Sys.Date()`"
+author: "Lisa Hitch"
+editor_options:
+  markdown:
+    wrap: 72
+---
+
+The `eval = FALSE` in this chunk prevents code from being evaluated on knit:
+
+```{r setup, include=TRUE}
+knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
+```
+
+## Importing data
+
+This tutorial is supposed to teach you how to load your dataset and "clean" your data (i.e. rename variables or levels of variables, remove irrelevant variables, code missing data etc.)
+
+When you have a dataset, click on File, then "Import Dataset" and then "From Text (Readr)". Choose your file and it should show you a preview of your dataset. On the top, you see your variable names and next to it is a little arrow. Click that and you can choose different variable types, for example "character" for text data, "double" for numeric data, or "factor" for variables with 0 and 1. You can also skip variables here if you do not want them imported. Before you click "Import", copy the code on the bottom right and paste it in a code chunk in your R Markdown document.
+
+Import the dataset "diabetes" as described above and choose the correct variable type for each variable. Paste the code that you copy from the readr here:
+
+```{r}
+
+```
+
+### Troubleshooting
+
+There is one column being imported as a character variable, when it should be
+numeric. Why? Fix it in the data file, then import again.
+
+
+## Recode impossible variable values as missing
+  
+Part of data cleaning is sometimes recoding impossible variable values as missing.
+For example, blood pressure values of "0" or "-99" or "999" are impossible and represent
+missing values. Use dplyr's `case_when` or `case_match` functions to recode any 
+such impossible values as `NA`.
+
+```{r}
+
+```
+
+
+## Subsetting 
+
+Create a subset, for example only participants who had exactly 1 pregnancy.
+
+```{r}
+filter(diabetes, Pregnancies == 1) |>
+  pull(Pregnancies) |>
+  table()
+```
+## Keep/Remove/Rename variables manually
+
+You can also add or remove variables after you imported your dataset with the 
+`dplyr::select` function (see code below). The `dplyr::rename()` function can be 
+used to change the name of your variable. It always follows this structure: 
+* `old name = new name`
+
+```{r}
+library(dplyr)
+diabetes1 <- select(diabetes, c(BMI, Glucose, Insulin)) #this only keeps these three variables
+diabetes1
+
+diabetes2 <- select(diabetes, -Pregnancies) #this removes the Pregnancy variable
+diabetes2
+
+diabetes3 <- rename(diabetes, BodyMassIndex = BMI) #this renames the old variable "BMI" to "BodyMassIndex"
+diabetes3
+
+
+```
+
+### Exercise 2
+
+Create a diabetes dataset that only includes Outcome, Insulin, Glucose, Age, and BMI and rename Glucose to "blood_glucose"
+
+```{r}
+
+```
+
+## 3. Change variable type
+
+In same cases you want to change the variable type. For example, your variable 
+has 0 and 1, but since they are not numeric but stand for two different levels 
+of your variable (e.g. female and male) you want to convert it to a factor. 
+
+```{r}
+#convert any variable to a string or character variable
+diabetes4 <- mutate(diabetes, Outcome=as.character(Outcome))
+class(diabetes4$Outcome)
+
+#convert any variable to a numeric variable
+diabetes4 <- mutate(diabetes, Outcome=as.numeric(Outcome))
+class(diabetes4$Outcome)
+
+#convert any variable to a factor variable
+diabetes4 <- mutate(diabetes, Outcome=factor(Outcome))
+class(diabetes4$Outcome)
+```
+
+## 4. Delete `NA` or missing data
+
+Note that you should never delete missing data before creating your Table 1
+(ie missingness should be included in your table of descriptive statistics). 
+In your analysis there are several ways to deal with missingness, including:
+* multiple imputation
+* for factors, treating missing values as a distinct factor level
+* removal of observations with missing values for any of the variables of interest
+(ie outcome or covariates in a regression model)
+
+You can use the following code to any observations with any missing data ("NA"). 
+This should _only_ be done if you have already selected only columns of interest,
+otherwise you might remove rows that were only missing irrelevant variables.
+
+```{r}
+diabetes5 <- na.omit(diabetes) #this deletes all rows with missing data
+```
+
+Note, it is _NOT_ recommended to use integer values to represent missingness. In
+R that is what `NA` is for. The above command will only remove missing values 
+that are coded as NA.
+
+
+### Exercise 3:
+Create a dataset from the diabetes dataset with only Elderly adults who are older than 60 years.
+
+```{r}
+
+```
+
+## 6. Rename levels of your variable
+We may want to re-name the levels of a variable. So first, I would check the levels and the level order with the levels() function.
+
+```{r}
+levels(diabetes6$Outcome)
+```
+So here I see that the Outcome variable has two levels: 0 and 1. All datasets should have a codebook where it states what the 0 and 1 stand for. Here, the 0 stands for not having a diabetes diagnosis and 1 stands for having a diabetes diagnosis. To make it easier, I can rename the levels with the following code:
+
+```{r}
+levels(diabetes6$Outcome) <- c("no diagnosis", "diagnosis")
+diabetes6
+
+diabetes8 <- diabetes %>% mutate(Outcome = case_match(Outcome, 
+"0" ~ "No diagnosis",
+"1" ~ "diagnosis"))
+diabetes8
+
+```
+
+## Exercise 4:
+Now that you have some experience cleaning your data, try the following exercise:
+Create a dataset from the diabetes dataset with the following characteristics:
+
+Drop the variable DiabetesPedigreeFunction (keep all other variables)
+Age between 20-60
+Outcome as a factor and 0 = no diabetes and 1 = diabetes
+Insulin, Skin Thickness, and Blood Pressure > 0
+BMI between 15 and 40
+
+```{r}
+
+```
+
+
