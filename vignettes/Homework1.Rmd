@@ -3,7 +3,7 @@ title: "BIOS 1 - Homework 1"
 output:
   html_document: 
     toc: yes
-date: "`r Sys.Date()`"
+date: "2023-03-02"
 author: "Levi Waldron"
 editor_options:
   markdown:
