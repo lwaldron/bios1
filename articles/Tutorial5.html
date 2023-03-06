@@ -64,7 +64,7 @@
       <img src="" class="logo" alt=""><h1>Tutorial 5</h1>
                         <h4 data-toc-skip class="author">Lisa Hitch</h4>
             
-            <h4 data-toc-skip class="date">2023-03-04</h4>
+            <h4 data-toc-skip class="date">2023-03-06</h4>
       
       
       <div class="d-none name"><code>Tutorial5.Rmd</code></div>
@@ -75,7 +75,7 @@
 <p>The <code>eval = FALSE</code> in this chunk prevents code from being
 evaluated on knit:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">knitr</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/knitr/man/opts_chunk.html" class="external-link">opts_chunk</a></span><span class="op">$</span><span class="fu">set</span><span class="op">(</span>echo <span class="op">=</span> <span class="cn">TRUE</span>, eval <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">knitr</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/knitr/man/opts_chunk.html" class="external-link">opts_chunk</a></span><span class="op">$</span><span class="fu">set</span><span class="op">(</span>echo <span class="op">=</span> <span class="cn">TRUE</span>, eval <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
 <h2 id="importing-data">Importing data<a class="anchor" aria-label="anchor" href="#importing-data"></a>
 </h2>
@@ -94,12 +94,48 @@ in your R Markdown document.</p>
 <p>Import the dataset “diabetes” as described above and choose the
 correct variable type for each variable. Paste the code that you copy
 from the readr here:</p>
-<div class="section level3">
-<h3 id="troubleshooting">Troubleshooting<a class="anchor" aria-label="anchor" href="#troubleshooting"></a>
-</h3>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://readr.tidyverse.org" class="external-link">readr</a></span><span class="op">)</span></span>
+<span><span class="va">diabetes</span> <span class="op">&lt;-</span></span>
+<span>  <span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">read_csv</a></span><span class="op">(</span></span>
+<span>    <span class="st">"datafiles/diabetes.csv"</span>,</span>
+<span>    col_types <span class="op">=</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/cols.html" class="external-link">cols</a></span><span class="op">(</span>Pregnancies <span class="op">=</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/parse_atomic.html" class="external-link">col_integer</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>                     Outcome <span class="op">=</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/parse_factor.html" class="external-link">col_factor</a></span><span class="op">(</span>levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"0"</span>, <span class="st">"1"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="exercise-1-troubleshooting">Exercise 1: Troubleshooting<a class="anchor" aria-label="anchor" href="#exercise-1-troubleshooting"></a>
+</h2>
 <p>There is one column being imported as a character variable, when it
 should be numeric. Why? Fix it in the data file, then import again.</p>
-</div>
+<p>Solution: see which supposedly numeric column is actually character
+using <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code>. See which observations in that column are
+not numeric by coercing the column to numeric using
+<code><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric()</a></code>. Inspect that value in the source data file
+and re-type correctly.</p>
+<blockquote>
+<p>Row 28 (observation 27) DiabetesPedigreeFunction had a letter “O”
+instead of a numeric “0”.</p>
+</blockquote>
+<p>Alternatively we could leave the source file alone, and correct this
+after reading:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://readr.tidyverse.org" class="external-link">readr</a></span><span class="op">)</span></span>
+<span><span class="va">diabetes</span> <span class="op">&lt;-</span></span>
+<span>  <span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">read_csv</a></span><span class="op">(</span></span>
+<span>    <span class="st">"https://github.com/lwaldron/bios1/raw/main/vignettes/datafiles/diabetes.csv"</span>,</span>
+<span>    col_types <span class="op">=</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/cols.html" class="external-link">cols</a></span><span class="op">(</span>Pregnancies <span class="op">=</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/parse_atomic.html" class="external-link">col_integer</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>                     Outcome <span class="op">=</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/parse_factor.html" class="external-link">col_factor</a></span><span class="op">(</span>levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"0"</span>, <span class="st">"1"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="va">diabetes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="va">diabetes</span>,</span>
+<span>       DiabetesPedigreeFunction <span class="op">=</span> <span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_replace.html" class="external-link">str_replace_all</a></span><span class="op">(</span><span class="va">DiabetesPedigreeFunction</span>, <span class="st">"O"</span>, <span class="st">"0"</span><span class="op">)</span>,</span>
+<span>       DiabetesPedigreeFunction <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">DiabetesPedigreeFunction</span><span class="op">)</span></span>
+<span>       <span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">diabetes</span><span class="op">$</span><span class="va">DiabetesPedigreeFunction</span><span class="op">)</span> <span class="co"># now numeric with no missing values!</span></span></code></pre></div>
+<pre><code><span><span class="co">##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></span>
+<span><span class="co">##  0.0780  0.2437  0.3725  0.4719  0.6262  2.4200</span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="recode-impossible-variable-values-as-missing">Recode impossible variable values as missing<a class="anchor" aria-label="anchor" href="#recode-impossible-variable-values-as-missing"></a>
@@ -109,16 +145,35 @@ values as missing. For example, blood pressure values of “0” or “-99” or
 “999” are impossible and represent missing values. Use dplyr’s
 <code>case_when</code> or <code>case_match</code> functions to recode
 any such impossible values as <code>NA</code>.</p>
+<blockquote>
+<p>Inspect histograms of each numeric column, and frequency tables of
+each categorical column, in order to assess the validity of values.</p>
+</blockquote>
+<p>This fixes just one of the numeric variables with problems,
+BloodPressure. It also recodes Outcome as “diabetes” and “no diabetes”,
+with “no diabetes” as the reference category.</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
+<span><span class="va">diabetes2</span> <span class="op">&lt;-</span> <span class="va">diabetes</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>BloodPressure <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html" class="external-link">case_when</a></span><span class="op">(</span><span class="va">BloodPressure</span> <span class="op">&gt;</span>  <span class="fl">300</span> <span class="op">~</span> <span class="cn">NA</span>,</span>
+<span>                                   <span class="va">BloodPressure</span> <span class="op">&lt;</span> <span class="fl">20</span> <span class="op">~</span> <span class="cn">NA</span>,</span>
+<span>                                   .default <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">BloodPressure</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>Outcome <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_match.html" class="external-link">case_match</a></span><span class="op">(</span><span class="va">Outcome</span>, <span class="st">"1"</span> <span class="op">~</span> <span class="st">"diabetes"</span>,</span>
+<span>                              <span class="st">"0"</span> <span class="op">~</span> <span class="st">"no diabetes"</span>,</span>
+<span>                              .ptype <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span>levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"no diabetes"</span>, <span class="st">"diabetes"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="subsetting">Subsetting<a class="anchor" aria-label="anchor" href="#subsetting"></a>
 </h2>
 <p>Create a subset, for example only participants who had exactly 1
 pregnancy.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">diabetes</span>, <span class="va">Pregnancies</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">pull</span><span class="op">(</span><span class="va">Pregnancies</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">diabetes</span>, <span class="va">Pregnancies</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">Pregnancies</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## </span></span>
+<span><span class="co">##   1 </span></span>
+<span><span class="co">## 135</span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="keepremoverename-variables-manually">Keep/Remove/Rename variables manually<a class="anchor" aria-label="anchor" href="#keepremoverename-variables-manually"></a>
@@ -128,45 +183,94 @@ with the <code><a href="https://dplyr.tidyverse.org/reference/select.html" class
 <code><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">dplyr::rename()</a></code> function can be used to change the name of
 your variable. It always follows this structure: *
 <code>old name = new name</code></p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
-<span><span class="va">diabetes1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">diabetes</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">BMI</span>, <span class="va">Glucose</span>, <span class="va">Insulin</span><span class="op">)</span><span class="op">)</span> <span class="co">#this only keeps these three variables</span></span>
-<span><span class="va">diabetes1</span></span>
-<span></span>
-<span><span class="va">diabetes2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">diabetes</span>, <span class="op">-</span><span class="va">Pregnancies</span><span class="op">)</span> <span class="co">#this removes the Pregnancy variable</span></span>
-<span><span class="va">diabetes2</span></span>
-<span></span>
-<span><span class="va">diabetes3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span><span class="va">diabetes</span>, BodyMassIndex <span class="op">=</span> <span class="va">BMI</span><span class="op">)</span> <span class="co">#this renames the old variable "BMI" to "BodyMassIndex"</span></span>
-<span><span class="va">diabetes3</span></span></code></pre></div>
-<div class="section level3">
-<h3 id="exercise-2">Exercise 2<a class="anchor" aria-label="anchor" href="#exercise-2"></a>
-</h3>
-<p>Create a diabetes dataset that only includes Outcome, Insulin,
-Glucose, Age, and BMI and rename Glucose to “blood_glucose”</p>
-</div>
+<span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">diabetes</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">BMI</span>, <span class="va">Glucose</span>, <span class="va">Insulin</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="op">)</span> <span class="co">#this only keeps these three variables</span></span></code></pre></div>
+<pre><code><span><span class="co">##       BMI           Glucose         Insulin     </span></span>
+<span><span class="co">##  Min.   : 0.00   Min.   :  0.0   Min.   :  0.0  </span></span>
+<span><span class="co">##  1st Qu.:27.30   1st Qu.: 99.0   1st Qu.:  0.0  </span></span>
+<span><span class="co">##  Median :32.00   Median :117.0   Median : 30.5  </span></span>
+<span><span class="co">##  Mean   :31.99   Mean   :120.9   Mean   : 79.8  </span></span>
+<span><span class="co">##  3rd Qu.:36.60   3rd Qu.:140.2   3rd Qu.:127.2  </span></span>
+<span><span class="co">##  Max.   :67.10   Max.   :199.0   Max.   :846.0</span></span></code></pre>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">diabetes</span>, <span class="op">-</span><span class="va">Pregnancies</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="op">)</span> <span class="co">#this removes the Pregnancy variable</span></span></code></pre></div>
+<pre><code><span><span class="co">##     Glucose      BloodPressure     SkinThickness      Insulin     </span></span>
+<span><span class="co">##  Min.   :  0.0   Min.   :   0.00   Min.   : 0.00   Min.   :  0.0  </span></span>
+<span><span class="co">##  1st Qu.: 99.0   1st Qu.:  62.00   1st Qu.: 0.00   1st Qu.:  0.0  </span></span>
+<span><span class="co">##  Median :117.0   Median :  72.00   Median :23.00   Median : 30.5  </span></span>
+<span><span class="co">##  Mean   :120.9   Mean   :  82.03   Mean   :20.54   Mean   : 79.8  </span></span>
+<span><span class="co">##  3rd Qu.:140.2   3rd Qu.:  80.00   3rd Qu.:32.00   3rd Qu.:127.2  </span></span>
+<span><span class="co">##  Max.   :199.0   Max.   :9999.00   Max.   :99.00   Max.   :846.0  </span></span>
+<span><span class="co">##       BMI        DiabetesPedigreeFunction      Age        Outcome</span></span>
+<span><span class="co">##  Min.   : 0.00   Min.   :0.0780           Min.   :21.00   0:500  </span></span>
+<span><span class="co">##  1st Qu.:27.30   1st Qu.:0.2437           1st Qu.:24.00   1:268  </span></span>
+<span><span class="co">##  Median :32.00   Median :0.3725           Median :29.00          </span></span>
+<span><span class="co">##  Mean   :31.99   Mean   :0.4719           Mean   :33.24          </span></span>
+<span><span class="co">##  3rd Qu.:36.60   3rd Qu.:0.6262           3rd Qu.:41.00          </span></span>
+<span><span class="co">##  Max.   :67.10   Max.   :2.4200           Max.   :81.00</span></span></code></pre>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span><span class="va">diabetes</span>, BodyMassIndex <span class="op">=</span> <span class="va">BMI</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="op">)</span> <span class="co">#this renames the old variable "BMI" to "BodyMassIndex"</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] "Pregnancies"              "Glucose"                 </span></span>
+<span><span class="co">## [3] "BloodPressure"            "SkinThickness"           </span></span>
+<span><span class="co">## [5] "Insulin"                  "BodyMassIndex"           </span></span>
+<span><span class="co">## [7] "DiabetesPedigreeFunction" "Age"                     </span></span>
+<span><span class="co">## [9] "Outcome"</span></span></code></pre>
 </div>
 <div class="section level2">
-<h2 id="change-variable-type">3. Change variable type<a class="anchor" aria-label="anchor" href="#change-variable-type"></a>
+<h2 id="exercise-2">Exercise 2<a class="anchor" aria-label="anchor" href="#exercise-2"></a>
+</h2>
+<p>Create a diabetes dataset that only includes Outcome, Insulin,
+Glucose, Age, and BMI and rename Glucose to “blood_glucose”</p>
+<p>Solution:</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">diabetes2</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span>blood_glucose <span class="op">=</span> <span class="va">Glucose</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">Outcome</span>, <span class="va">Insulin</span>, <span class="va">blood_glucose</span>, <span class="va">Age</span>, <span class="va">BMI</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 768 × 5</span></span></span>
+<span><span class="co">##    Outcome     Insulin blood_glucose   Age   BMI</span></span>
+<span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> diabetes          0           148    50  33.6</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> no diabetes       0            85    31  26.6</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> diabetes          0           183    32  23.3</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> no diabetes      94            89    21  28.1</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> diabetes        168           137    33  43.1</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> no diabetes       0           116    30  25.6</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> diabetes         88            78    26  31  </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> no diabetes       0           115    29  35.3</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> diabetes        543           197    53  30.5</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">10</span> diabetes          0           125    54   0  </span></span>
+<span><span class="co">## <span style="color: #949494;"># … with 758 more rows</span></span></span></code></pre>
+</div>
+<div class="section level2">
+<h2 id="change-variable-type">Change variable type<a class="anchor" aria-label="anchor" href="#change-variable-type"></a>
 </h2>
 <p>In same cases you want to change the variable type. For example, your
 variable has 0 and 1, but since they are not numeric but stand for two
 different levels of your variable (e.g. female and male) you want to
 convert it to a factor.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">#convert any variable to a string or character variable</span></span>
-<span><span class="va">diabetes4</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="va">diabetes</span>, Outcome<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">Outcome</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">diabetes4</span><span class="op">$</span><span class="va">Outcome</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">#convert any variable to a numeric variable</span></span>
-<span><span class="va">diabetes4</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="va">diabetes</span>, Outcome<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">Outcome</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">diabetes4</span><span class="op">$</span><span class="va">Outcome</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">#convert any variable to a factor variable</span></span>
-<span><span class="va">diabetes4</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="va">diabetes</span>, Outcome<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">Outcome</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">diabetes4</span><span class="op">$</span><span class="va">Outcome</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># another way to convert a variable to a factor with informative labels</span></span>
+<span><span class="va">diabetes3</span> <span class="op">&lt;-</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="va">diabetes</span>, Outcome <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">Outcome</span>, levels <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">1</span>, labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"no"</span>, <span class="st">"yes"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">diabetes</span><span class="op">$</span><span class="va">Outcome</span>, <span class="va">diabetes3</span><span class="op">$</span><span class="va">Outcome</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##    </span></span>
+<span><span class="co">##      no yes</span></span>
+<span><span class="co">##   0 500   0</span></span>
+<span><span class="co">##   1   0 268</span></span></code></pre>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">diabetes3</span><span class="op">$</span><span class="va">Outcome</span><span class="op">)</span> <span class="co">#note the first value listed is the reference category</span></span></code></pre></div>
+<pre><code><span><span class="co">##  no yes </span></span>
+<span><span class="co">## 500 268</span></span></code></pre>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/levels.html" class="external-link">levels</a></span><span class="op">(</span><span class="va">diabetes3</span><span class="op">$</span><span class="va">Outcome</span><span class="op">)</span> <span class="co">#again the first value listed is the reference category</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] "no"  "yes"</span></span></code></pre>
 </div>
 <div class="section level2">
-<h2 id="delete-na-or-missing-data">4. Delete <code>NA</code> or missing data<a class="anchor" aria-label="anchor" href="#delete-na-or-missing-data"></a>
+<h2 id="delete-na-or-missing-data">Delete <code>NA</code> or missing data<a class="anchor" aria-label="anchor" href="#delete-na-or-missing-data"></a>
 </h2>
 <p>Note that you should never delete missing data before creating your
 Table 1 (ie missingness should be included in your table of descriptive
@@ -175,53 +279,90 @@ missingness, including: * multiple imputation * for factors, treating
 missing values as a distinct factor level * removal of observations with
 missing values for any of the variables of interest (ie outcome or
 covariates in a regression model)</p>
-<p>You can use the following code to any observations with any missing
-data (“NA”). This should <em>only</em> be done if you have already
-selected only columns of interest, otherwise you might remove rows that
-were only missing irrelevant variables.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">diabetes5</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/na.fail.html" class="external-link">na.omit</a></span><span class="op">(</span><span class="va">diabetes</span><span class="op">)</span> <span class="co">#this deletes all rows with missing data</span></span></code></pre></div>
+<p>You can use the following code to delete any observations with any
+missing data (“NA”). This should <em>only</em> be done if you have
+already selected only columns of interest, otherwise you might remove
+rows that were only missing irrelevant variables.</p>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">diabetes</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] 768   9</span></span></code></pre>
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">diabetes</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/stats/na.fail.html" class="external-link">na.omit</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] 768   9</span></span></code></pre>
 <p>Note, it is <em>NOT</em> recommended to use integer values to
 represent missingness. In R that is what <code>NA</code> is for. The
 above command will only remove missing values that are coded as NA.</p>
-<div class="section level3">
-<h3 id="exercise-3">Exercise 3:<a class="anchor" aria-label="anchor" href="#exercise-3"></a>
-</h3>
-<p>Create a dataset from the diabetes dataset with only Elderly adults
-who are older than 60 years.</p>
-</div>
 </div>
 <div class="section level2">
-<h2 id="rename-levels-of-your-variable">6. Rename levels of your variable<a class="anchor" aria-label="anchor" href="#rename-levels-of-your-variable"></a>
+<h2 id="exercise-3">Exercise 3<a class="anchor" aria-label="anchor" href="#exercise-3"></a>
+</h2>
+<p>Create a dataset from the diabetes dataset with only Elderly adults
+who are older than 60 years.</p>
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># before</span></span>
+<span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">diabetes2</span>, <span class="va">Age</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></span>
+<span><span class="co">##   21.00   24.00   29.00   33.24   41.00   81.00</span></span></code></pre>
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># after</span></span>
+<span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">diabetes2</span>, <span class="va">Age</span> <span class="op">&gt;</span> <span class="fl">60</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">Age</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></span>
+<span><span class="co">##   61.00   63.00   65.00   65.74   67.00   81.00</span></span></code></pre>
+</div>
+<div class="section level2">
+<h2 id="rename-levels-of-your-variable">Rename levels of your variable<a class="anchor" aria-label="anchor" href="#rename-levels-of-your-variable"></a>
 </h2>
 <p>We may want to re-name the levels of a variable. So first, I would
 check the levels and the level order with the levels() function.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/levels.html" class="external-link">levels</a></span><span class="op">(</span><span class="va">diabetes6</span><span class="op">$</span><span class="va">Outcome</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/levels.html" class="external-link">levels</a></span><span class="op">(</span><span class="va">diabetes2</span><span class="op">$</span><span class="va">Outcome</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] "no diabetes" "diabetes"</span></span></code></pre>
 <p>So here I see that the Outcome variable has two levels: 0 and 1. All
 datasets should have a codebook where it states what the 0 and 1 stand
 for. Here, the 0 stands for not having a diabetes diagnosis and 1 stands
 for having a diabetes diagnosis. To make it easier, I can rename the
 levels with the following code:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/levels.html" class="external-link">levels</a></span><span class="op">(</span><span class="va">diabetes6</span><span class="op">$</span><span class="va">Outcome</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"no diagnosis"</span>, <span class="st">"diagnosis"</span><span class="op">)</span></span>
-<span><span class="va">diabetes6</span></span>
-<span></span>
-<span><span class="va">diabetes8</span> <span class="op">&lt;-</span> <span class="va">diabetes</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>Outcome <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_match.html" class="external-link">case_match</a></span><span class="op">(</span><span class="va">Outcome</span>, </span>
-<span><span class="st">"0"</span> <span class="op">~</span> <span class="st">"No diagnosis"</span>,</span>
-<span><span class="st">"1"</span> <span class="op">~</span> <span class="st">"diagnosis"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">diabetes8</span></span></code></pre></div>
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/levels.html" class="external-link">levels</a></span><span class="op">(</span><span class="va">diabetes2</span><span class="op">$</span><span class="va">Outcome</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"no diagnosis"</span>, <span class="st">"diagnosis"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">diabetes2</span><span class="op">$</span><span class="va">Outcome</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## no diagnosis    diagnosis </span></span>
+<span><span class="co">##          500          268</span></span></code></pre>
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># alternatively</span></span>
+<span><span class="va">diabetes</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>Outcome <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_match.html" class="external-link">case_match</a></span><span class="op">(</span><span class="va">Outcome</span>,</span>
+<span>                              <span class="st">"0"</span> <span class="op">~</span> <span class="st">"No diagnosis"</span>,</span>
+<span>                              <span class="st">"1"</span> <span class="op">~</span> <span class="st">"diagnosis"</span><span class="op">)</span>,</span>
+<span><span class="co"># I specify levels here in order to make "No diagnosis" the reference</span></span>
+<span><span class="co"># category - otherwise whichever label comes first alphabetically will be</span></span>
+<span><span class="co"># the reference.</span></span>
+<span>                          levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"No diagnosis"</span>, <span class="st">"diagnosis"</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">Outcome</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="op">)</span> <span class="co">#the first one listed is the reference category</span></span></code></pre></div>
+<pre><code><span><span class="co">## No diagnosis    diagnosis </span></span>
+<span><span class="co">##          500          268</span></span></code></pre>
 </div>
 <div class="section level2">
-<h2 id="exercise-4">Exercise 4:<a class="anchor" aria-label="anchor" href="#exercise-4"></a>
+<h2 id="exercise-4">Exercise 4<a class="anchor" aria-label="anchor" href="#exercise-4"></a>
 </h2>
 <p>Now that you have some experience cleaning your data, try the
 following exercise: Create a dataset from the diabetes dataset with the
 following characteristics:</p>
-<p>Drop the variable DiabetesPedigreeFunction (keep all other variables)
-Age between 20-60 Outcome as a factor and 0 = no diabetes and 1 =
-diabetes Insulin, Skin Thickness, and Blood Pressure &gt; 0 BMI between
-15 and 40</p>
+<ul>
+<li>Drop the variable DiabetesPedigreeFunction (keep all other
+variables)</li>
+<li>Age between 20-60</li>
+<li>Outcome as a factor and 0 = no diabetes and 1 = diabetes</li>
+<li>Insulin, Skin Thickness, and Blood Pressure = 0 recoded as NA</li>
+<li>Any other impossible values coded as NA</li>
+<li>BMI between 15 and 40</li>
+</ul>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>
