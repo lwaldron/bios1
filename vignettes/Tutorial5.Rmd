@@ -3,6 +3,7 @@ title: "Tutorial 5"
 output:
   html_document: 
     toc: yes
+    number_sections: yes
 date: "`r Sys.Date()`"
 author: "Lisa Hitch"
 editor_options:
@@ -13,10 +14,10 @@ editor_options:
 The `eval = FALSE` in this chunk prevents code from being evaluated on knit:
 
 ```{r setup, include=TRUE}
-knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
+knitr::opts_chunk$set(echo = TRUE, eval = TRUE)
 ```
 
-## Importing data
+# Importing data
 
 This tutorial is supposed to teach you how to load your dataset and "clean" your data (i.e. rename variables or levels of variables, remove irrelevant variables, code missing data etc.)
 
@@ -24,38 +25,86 @@ When you have a dataset, click on File, then "Import Dataset" and then "From Tex
 
 Import the dataset "diabetes" as described above and choose the correct variable type for each variable. Paste the code that you copy from the readr here:
 
-```{r}
-
+```{r, message=FALSE}
+library(tidyverse)
 ```
 
-### Troubleshooting
+```{r, cache = TRUE}
+library(readr)
+diabetes <-
+  read_csv(
+    "datafiles/diabetes.csv",
+    col_types = cols(Pregnancies = col_integer(),
+                     Outcome = col_factor(levels = c("0", "1")))
+  )
+```
+
+# Exercise 1: Troubleshooting
 
 There is one column being imported as a character variable, when it should be
 numeric. Why? Fix it in the data file, then import again.
 
+Solution: see which supposedly numeric column is actually character using 
+`summary()`. See which observations in that column are not numeric by coercing
+the column to numeric using `as.numeric()`. Inspect that value in the source
+data file and re-type correctly.
 
-## Recode impossible variable values as missing
+> Row 28 (observation 27) DiabetesPedigreeFunction had a letter "O" instead of a 
+numeric "0". 
+
+Alternatively we could leave the source file alone, and correct this after reading:
+
+```{r}
+library(readr)
+diabetes <-
+  read_csv(
+    "https://github.com/lwaldron/bios1/raw/main/vignettes/datafiles/diabetes.csv",
+    col_types = cols(Pregnancies = col_integer(),
+                     Outcome = col_factor(levels = c("0", "1")))
+  )
+diabetes <- mutate(diabetes,
+       DiabetesPedigreeFunction = stringr::str_replace_all(DiabetesPedigreeFunction, "O", "0"),
+       DiabetesPedigreeFunction = as.numeric(DiabetesPedigreeFunction)
+       )
+summary(diabetes$DiabetesPedigreeFunction) # now numeric with no missing values!
+```
+
+# Recode impossible variable values as missing
   
 Part of data cleaning is sometimes recoding impossible variable values as missing.
 For example, blood pressure values of "0" or "-99" or "999" are impossible and represent
 missing values. Use dplyr's `case_when` or `case_match` functions to recode any 
 such impossible values as `NA`.
 
-```{r}
+> Inspect histograms of each numeric column, and frequency tables of each categorical
+> column, in order to assess the validity of values.
 
+This fixes just one of the numeric variables with problems, BloodPressure. It
+also recodes Outcome as "diabetes" and "no diabetes", with "no diabetes" as the
+reference category.
+
+```{r}
+library(dplyr)
+diabetes2 <- diabetes %>%
+  mutate(BloodPressure = case_when(BloodPressure >  300 ~ NA,
+                                   BloodPressure < 20 ~ NA,
+                                   .default = as.numeric(BloodPressure))) %>%
+  mutate(Outcome = case_match(Outcome, "1" ~ "diabetes",
+                              "0" ~ "no diabetes",
+                              .ptype = factor(levels = c("no diabetes", "diabetes"))))
 ```
 
 
-## Subsetting 
+# Subsetting 
 
 Create a subset, for example only participants who had exactly 1 pregnancy.
 
 ```{r}
-filter(diabetes, Pregnancies == 1) |>
+dplyr::filter(diabetes, Pregnancies == 1) |>
   pull(Pregnancies) |>
   table()
 ```
-## Keep/Remove/Rename variables manually
+# Keep/Remove/Rename variables manually
 
 You can also add or remove variables after you imported your dataset with the 
 `dplyr::select` function (see code below). The `dplyr::rename()` function can be 
@@ -64,47 +113,46 @@ used to change the name of your variable. It always follows this structure:
 
 ```{r}
 library(dplyr)
-diabetes1 <- select(diabetes, c(BMI, Glucose, Insulin)) #this only keeps these three variables
-diabetes1
+select(diabetes, c(BMI, Glucose, Insulin)) %>%
+  summary() #this only keeps these three variables
 
-diabetes2 <- select(diabetes, -Pregnancies) #this removes the Pregnancy variable
-diabetes2
+select(diabetes, -Pregnancies) %>% 
+  summary() #this removes the Pregnancy variable
 
-diabetes3 <- rename(diabetes, BodyMassIndex = BMI) #this renames the old variable "BMI" to "BodyMassIndex"
-diabetes3
+rename(diabetes, BodyMassIndex = BMI) %>% 
+  colnames() #this renames the old variable "BMI" to "BodyMassIndex"
 
 
 ```
 
-### Exercise 2
+# Exercise 2
 
 Create a diabetes dataset that only includes Outcome, Insulin, Glucose, Age, and BMI and rename Glucose to "blood_glucose"
 
-```{r}
+Solution:
 
+```{r}
+diabetes2 %>%
+  rename(blood_glucose = Glucose) %>%
+  select(c(Outcome, Insulin, blood_glucose, Age, BMI))
 ```
 
-## 3. Change variable type
+# Change variable type
 
 In same cases you want to change the variable type. For example, your variable 
 has 0 and 1, but since they are not numeric but stand for two different levels 
 of your variable (e.g. female and male) you want to convert it to a factor. 
 
 ```{r}
-#convert any variable to a string or character variable
-diabetes4 <- mutate(diabetes, Outcome=as.character(Outcome))
-class(diabetes4$Outcome)
-
-#convert any variable to a numeric variable
-diabetes4 <- mutate(diabetes, Outcome=as.numeric(Outcome))
-class(diabetes4$Outcome)
-
-#convert any variable to a factor variable
-diabetes4 <- mutate(diabetes, Outcome=factor(Outcome))
-class(diabetes4$Outcome)
+# another way to convert a variable to a factor with informative labels
+diabetes3 <-
+  mutate(diabetes, Outcome = factor(Outcome, levels = 0:1, labels = c("no", "yes")))
+table(diabetes$Outcome, diabetes3$Outcome)
+summary(diabetes3$Outcome) #note the first value listed is the reference category
+levels(diabetes3$Outcome) #again the first value listed is the reference category
 ```
 
-## 4. Delete `NA` or missing data
+# Delete `NA` or missing data
 
 Note that you should never delete missing data before creating your Table 1
 (ie missingness should be included in your table of descriptive statistics). 
@@ -114,12 +162,15 @@ In your analysis there are several ways to deal with missingness, including:
 * removal of observations with missing values for any of the variables of interest
 (ie outcome or covariates in a regression model)
 
-You can use the following code to any observations with any missing data ("NA"). 
+You can use the following code to delete any observations with any missing data ("NA"). 
 This should _only_ be done if you have already selected only columns of interest,
 otherwise you might remove rows that were only missing irrelevant variables.
 
 ```{r}
-diabetes5 <- na.omit(diabetes) #this deletes all rows with missing data
+diabetes %>% dim()
+diabetes %>% 
+  na.omit() %>%
+  dim()
 ```
 
 Note, it is _NOT_ recommended to use integer values to represent missingness. In
@@ -127,41 +178,59 @@ R that is what `NA` is for. The above command will only remove missing values
 that are coded as NA.
 
 
-### Exercise 3:
+# Exercise 3
+
 Create a dataset from the diabetes dataset with only Elderly adults who are older than 60 years.
 
 ```{r}
-
+# before
+pull(diabetes2, Age) %>%
+  summary()
+# after
+dplyr::filter(diabetes2, Age > 60) %>%
+  pull(Age) %>%
+  summary()
 ```
 
-## 6. Rename levels of your variable
+# Rename levels of your variable
+
 We may want to re-name the levels of a variable. So first, I would check the levels and the level order with the levels() function.
 
 ```{r}
-levels(diabetes6$Outcome)
+levels(diabetes2$Outcome)
 ```
 So here I see that the Outcome variable has two levels: 0 and 1. All datasets should have a codebook where it states what the 0 and 1 stand for. Here, the 0 stands for not having a diabetes diagnosis and 1 stands for having a diabetes diagnosis. To make it easier, I can rename the levels with the following code:
 
 ```{r}
-levels(diabetes6$Outcome) <- c("no diagnosis", "diagnosis")
-diabetes6
+levels(diabetes2$Outcome) <- c("no diagnosis", "diagnosis")
+summary(diabetes2$Outcome)
 
-diabetes8 <- diabetes %>% mutate(Outcome = case_match(Outcome, 
-"0" ~ "No diagnosis",
-"1" ~ "diagnosis"))
-diabetes8
+# alternatively
+diabetes %>%
+  mutate(Outcome = factor(case_match(Outcome,
+                              "0" ~ "No diagnosis",
+                              "1" ~ "diagnosis"),
+# I specify levels here in order to make "No diagnosis" the reference
+# category - otherwise whichever label comes first alphabetically will be
+# the reference.
+                          levels = c("No diagnosis", "diagnosis"))
+  ) %>%
+  pull(Outcome) %>%
+  summary() #the first one listed is the reference category
 
 ```
 
-## Exercise 4:
+# Exercise 4
+
 Now that you have some experience cleaning your data, try the following exercise:
 Create a dataset from the diabetes dataset with the following characteristics:
 
-Drop the variable DiabetesPedigreeFunction (keep all other variables)
-Age between 20-60
-Outcome as a factor and 0 = no diabetes and 1 = diabetes
-Insulin, Skin Thickness, and Blood Pressure > 0
-BMI between 15 and 40
+* Drop the variable DiabetesPedigreeFunction (keep all other variables)
+* Age between 20-60
+* Outcome as a factor and 0 = no diabetes and 1 = diabetes
+* Insulin, Skin Thickness, and Blood Pressure = 0 recoded as NA
+* Any other impossible values coded as NA
+* BMI between 15 and 40
 
 ```{r}
 
