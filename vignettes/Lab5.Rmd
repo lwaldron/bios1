@@ -1,0 +1,69 @@
+---
+title: "Writing and debugging a function in R"
+output: 
+  html_document: 
+    toc: yes
+    number_sections: yes
+---
+
+# Overview
+
+In this lab, you will learn how to write a simple function in R and use the `browser()` command to debug it. Debugging is a crucial step in the development process of any software. It involves finding and fixing errors or bugs in your code. The `browser()` command allows you to stop the execution of your code at a specific point and inspect the values of variables and objects.
+
+# Loading data
+
+We will use the `NHANES` library which provides a small subset of the National Health and Nutrition Examination data (https://wwwn.cdc.gov/nchs/nhanes/Default.aspx). 
+
+Install and load the "NHANES" dataset and find the help page that contains a codebook. 
+
+a) Do not include an evaluated `install.package()` in your Rmd program. What can happen if you do?
+
+b) What is in the "Description" section of the help page for the "NHANES" object?
+
+
+## Viewing the data
+
+Note that the following command is for interactive use only, so to show it 
+only you can use the `eval = FALSE` command to the code chunk. 
+
+What can happen if you have an evaluated `View()` command in your .Rmd file?
+
+```{r, eval = FALSE}
+View(NHANES)
+```
+
+# Summarizing the data
+
+Use the `summary()` function to summarize the dataset. How many missing values are there for weight and height?
+
+# Writing a Function
+
+Let's write a function that takes two arguments:
+1. df is a dataframe with two columns of numeric data
+2. `i` is an integer vector of indices corresponding to rows of this dataframe that will be used in the calculation
+
+The function filters the dataframe to only rows `i` that have no missing values, 
+then returns the difference in the mean of the first column minus the mean of the second column.
+
+Hint: start by doing this calculation on the weight and height columns of the `NHANES`
+dataset, then copy your working code into a function. 
+
+
+# Debugging with the Browser Command
+
+If your function is working without error, create an error intentionally. For example, pass 
+a character value for the argument `i`.
+
+Now we want to use the `browser()` command to debug the function. The `browser()` command will stop the execution of the function at a specific point and allow us to inspect the values of variables and objects. 
+
+a) Insert the `browser()` command as the first line inside your function, and pass this new function
+definition to the R console.
+
+b) Use `ls()` or the "Environment" tab to see what variables are visible in your new environment within
+the function. What variables do you see? What are they? How has this changed from before you entered the function?
+
+c) Once you have figured out what caused the error, exit from browser using Q, remove the browser command from your function, and re-define it without containing `browser()`.
+
+# Write another function
+
+Write another function that takes the same input arguments, but returns the difference in mean weight of males minus mean weight of females.
