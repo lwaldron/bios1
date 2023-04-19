@@ -1,0 +1,128 @@
+---
+title: "Lab 6: Image analysis to predict malignant breast cancer logistic regression"
+author: "Biostatistics 1"
+output: 
+  html_document: 
+    toc: yes
+---
+
+# Learning Objectives
+
+* Identify and correct a problematic data file
+* perform exploratory data analysis with a binary variable
+* perform logistic regression in R using the `glm()` function
+* identify collinearity among many numeric variables
+* interpret logistic regression coefficients in a predictive setting
+* use a logistic regression model to predict probabilities of a binary outcome
+* use `tidyr` to pivot from a wide format to a long format dataframe
+* use ggplot2's `facet_wrap()` to create multiple plots
+* overlay a line plot of predicted probabilities over an xy plot of data points
+
+
+# Materials
+
+* RStudio or any R environment
+* Dataset: `breast cancer.csv` ([download](https://raw.githubusercontent.com/lwaldron/bios1/main/vignettes/breast%20cancer.csv)).
+This dataset contains an outcome variable "diagnosis" with values B (benign) and M (malignant), and 
+a number of cellular pathologic features representing the properties of cells as calculated by an
+image analysis algorithm. Each row corresponds to a patient who underwent a tissue biopsy. Here is [more information about the dataset](http://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+%28Diagnostic%29) if you are interested.
+* R packages: readr, dplyr, ggplot2, tidyr, possibly ComplexHeatmap
+
+
+# 1. Importing the Dataset
+
+a. Import the dataset (`breast cancer.csv`) into R, using `readr`. What is the 
+problem with the 33rd column causing a warning?  Fix this problem in the data 
+file, then try again. Import `id` as a character, and `diagnosis` as a factor 
+with values B and M.
+b. Recode the "diagnosis" column to the more informative values "benign" and "malignant", 
+with reference level "benign"
+
+# 2. Exploratory Data Analysis (EDA)
+
+For each part of this question, write out something you notice from the data
+exploration, such as variable type, if and where there are missing values. 
+There are no right/wrong answers for this, it is just to get practice interpreting EDA. 
+
+a. Check the dimensions of the dataset using the dim() function
+
+b. Preview the first few rows of the dataset using the head() function
+
+c. Use `summary()` to summarize the dataset. 
+
+d. Identify collinear variables.
+
+The following command, run on a wide dataframe, will calculate 1 minus the pairwise 
+Pearson correlation between each pair of numeric variables in the dataset. This
+represents a distance matrix between variables, where "0" means two variables 
+that are identical or perfectly anti-correlated, and "1" means two variables have zero
+correlation. We use 1 minus the absolute value of the correlations so that it 
+becomes a distance measure instead of a correlation measure. 
+
+Plot this distance matrix to identify the most highly correlated or anticorrelated variables. 
+A few ways you could do this is (if your distance matrix is called `d`) are as
+follows - try them and choose your favorite. You may want to increase the size 
+of the figure output again.
+
+```{r, eval = FALSE}
+plot(hclust(as.dist(d)))
+```
+
+or:
+```{r, eval=FALSE}
+ComplexHeatmap::Heatmap(d)
+```
+
+or:
+```{r, eval=FALSE}
+ComplexHeatmap::pheatmap(d)
+```
+
+e. Create a box plot for each column except for `id`.  Each boxplot should have 
+two boxes, one for benign and one for malignant, allowing visual comparison of the
+distribution of that variable for benign and malignant specimens. Do any variables clearly
+have an association with breast cancer diagnosis?
+
+_Hints for e:_
+
+1. Create a new dataset without the `id` variable, then use the `tidyr::pivot_longer`
+function to create a "long" dataframe with 3 columns: 1. diagnosis, 2. the name of 
+the column from the "wide" dataframe, and 3. a column containing all the numeric values.
+The first example from the `pivot_longer` help page ("Simplest case where column names 
+are character data") is exactly analogous to what you need to do.
+2. With this "long" dataset you can add a `facet_wrap()` command to your ggplot 
+to create a box plot for each variable in a grid. Use the `scales` argument
+to use "free" scales so that each box plot can have a different scale, so that you 
+can read each box plot.
+3. Use the knitr chunk options `fig.width=10` and `fig.height=10` to increase the
+size of the figure to make theaxis labels readable.
+
+# 3. Building a Logistic Regression Model
+
+a. Fit a univariate logistic regression model using `area_mean` as the predictor and 
+`diagnosis` as the outcome, using the `glm()` function
+
+b. Print the summary of the model using the summary() function
+
+c. Interpret the coefficients of the logistic regression model
+
+# 4. Making predictions
+
+a. Create a xy plot with `area_mean` of the x axis and `diagnosis` on the y axis.
+Use `geom_jitter(width = 0)` to create some spread on the y-axis so you can see where 
+the points are without changing the x values.
+
+b. Now add to this plot the predicted probabilities for each observed temperature, using
+the `predict` function with argument `type="response"`.
+
+_Hint:_ First add a column of predicted probabilities to the `breast_cancer`
+dataframe. You will have to add 1 to these probabilities to make them on the same
+scale as the data points. Then you can add a `geom_line()` to the previous plot, 
+with its own `aes()`, to add the line. 
+
+_Suggestion:_ Change the line color and increase its width to make it more visible.
+
+c. What do you notice about the data points where the predicted probabilities are 0, 0.5, and 1?
+
+d. What are the predicted probabilities of a malignant diagnosis when `area_mean` is 300, 500,
+700, 900, and 1100?
