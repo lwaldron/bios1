@@ -78,6 +78,17 @@ or:
 ComplexHeatmap::pheatmap(d)
 ```
 
+Note, ComplexHeatmap is a [Bioconductor package](https://www.bioconductor.org). You 
+can install it as follows:
+```{r, eval=FALSE}
+install.packages("BiocManager")
+BiocManager::install("ComplexHeatmap")
+```
+
+`pheatmap` ("pretty heatmap") is a normal CRAN package that works well and you can 
+use instead, but ComplexHeatmap is the most powerful heatmap package available 
+at the time of writing this lab.
+
 e. Create a box plot for each column except for `id`.  Each boxplot should have 
 two boxes, one for benign and one for malignant, allowing visual comparison of the
 distribution of that variable for benign and malignant specimens. Do any variables clearly
