@@ -159,6 +159,14 @@ output again.</p>
 <p>or:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">ComplexHeatmap</span><span class="fu">::</span><span class="fu">pheatmap</span><span class="op">(</span><span class="va">d</span><span class="op">)</span></span></code></pre></div>
+<p>Note, ComplexHeatmap is a <a href="https://www.bioconductor.org" class="external-link">Bioconductor package</a>. You can
+install it as follows:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"BiocManager"</span><span class="op">)</span></span>
+<span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu">install</span><span class="op">(</span><span class="st">"ComplexHeatmap"</span><span class="op">)</span></span></code></pre></div>
+<p><code>pheatmap</code> (“pretty heatmap”) is a normal CRAN package
+that works well and you can use instead, but ComplexHeatmap is the most
+powerful heatmap package available at the time of writing this lab.</p>
 <ol start="5" style="list-style-type: lower-alpha">
 <li>Create a box plot for each column except for <code>id</code>. Each
 boxplot should have two boxes, one for benign and one for malignant,
