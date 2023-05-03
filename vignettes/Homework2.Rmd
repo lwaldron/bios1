@@ -1,0 +1,120 @@
+---
+title: "BIOS 1 - Homework 2"
+output:
+  html_document: 
+    toc: yes
+date: "2023-05-03"
+author: "Levi Waldron"
+editor_options:
+  markdown:
+    wrap: 72
+---
+
+# Source code and data for this assignment
+
+*Note*: The code used to create this document is [here](https://github.com/lwaldron/bios1/blob/main/vignettes/Homework2.Rmd).
+
+In this homework we will again use the NHEFS dataset. Take a look at the codebook linked to from
+<https://www.hsph.harvard.edu/miguel-hernan/causal-inference-book/>.
+
+This time we will test the hypothesis that quitting smoking between 1971 and 1981 
+(variable `qsmk`) reduces the probability of death by 2001 (variable `death`). 
+
+# Data import and recoding
+
+Download the dataset, import it into R, and recode variables as instructed in
+[Homework 1](https://lwaldron.github.io/bios1/articles/Homework1.html).
+
+```{r, cache=TRUE, eval = FALSE}
+library(readr)
+nhefs <- read_csv("https://cdn1.sph.harvard.edu/wp-content/uploads/sites/1268/1268/20/nhefs.csv")
+```
+
+# Question 1 (2 points): filter any censored or missing data
+
+Remove all participants that were lost to follow-up or "censored", whose value 
+of the `cens` variable is 0. You would ordinarily want to perform a sensitivity 
+analysis and consider the possibility of bias from informative censoring, but 
+you can ignore that possibility for the purposes of this assignment.
+
+Also remove observations that are missing any of the following variables:
+
+-   `death`
+-   `cens`
+-   `active`
+-   `age`
+-   `education`
+-   `exercise`
+-   `qsmk`
+-   `race`
+-   `sex`
+-   `smokeintensity`
+-   `smkyrs`
+-   `wt82_71`
+
+# Question 2 (4 points): Table 1
+
+Create a table of descriptive statistics like in HW1, but this time stratify it
+by the exposure variable `qsmk`
+
+
+# Question 2 (4 points): fit crude and adjusted logistic regression models
+
+Fit simple and adjusted multiple logistic regression models for the probability of death
+with quitting smoking as the exposure. In the multivariate model, adjust for sex, race, age, education, and 
+exercise as hypothesized confounders. Use a B-spline from the `splines` package to correct for age, ie:
+
+$$
+death \sim qsmk + sex + race + bs(age) + education + exercise 
+$$
+
+For the purpose of this question, assume that conditional exchangeability holds when 
+controlling for these confounders. 
+
+**Interpret the coefficient of `qsmk` in the crude model and in the adjusted model. 
+Compare them.**
+
+# Question 3 (3 points): model diagnostics
+
+Create a binned residual plot using the `binnedplot` function from the `arm` 
+library. Interpret the plot.
+
+# Question 4 (7 points): Inverse probability weighting
+
+a (2 points)) Create a model to calculate the propensity of exposure given the values of the 
+hypothesized confounders (propensity score). This is your "denominator" model of 
+Lecture 11, Slide 15.  ie,
+
+$$
+\textbf{denom.fit}:qsmk \sim sex + race + bs(age) + education + exercise 
+$$
+
+Also fit your "numerator model",
+$$
+\textbf{num.fit}: qsmk \sim 1
+$$
+
+
+b (2 points)) Calculate IPTW weights using this model. Hint - you can use code like this:
+
+```{r, eval = FALSE}
+pdenom <- predict(denom.fit, type = "response")
+pnum <- predict(num.fit, type = "response")
+nhefs$iptw <- ifelse(nhefs$qsmk == 0, ((1-pn.qsmk)/(1-pd.qsmk)),
+                     (pn.qsmk/pd.qsmk))
+```
+
+c (2 points)) Use the `geeglm` function from the `geepack` library to use these weights to
+estimate the causal effect of quitting smoking on death. 
+
+Notes:
+- the `id` argument to `geepack` is arbitrary in this case because there is no grouping or
+hierarchical structure of participants. You can use the `seqn` variable or `1:nrow(nhefs)`.
+- The `corstr` argument is also arbitrary for the same reason; use `corstr="unstructured"`
+- Remember that when using these weights, *do not* include confounders in the model.
+
+
+d (1 point)) Compare the coefficient and standard error for quitting smoking to Question 2, 
+and comment. Recall the discussion in lecture about `geepack` standard errors being 
+too conservative.
+
