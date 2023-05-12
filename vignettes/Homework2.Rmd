@@ -58,7 +58,7 @@ Create a table of descriptive statistics like in HW1, but this time stratify it
 by the exposure variable `qsmk`
 
 
-# Question 2 (4 points): fit crude and adjusted logistic regression models
+# Question 3 (4 points): fit crude and adjusted logistic regression models
 
 Fit simple and adjusted multiple logistic regression models for the probability of death
 with quitting smoking as the exposure. In the multivariate model, adjust for sex, race, age, education, and 
@@ -74,12 +74,12 @@ controlling for these confounders.
 **Interpret the coefficient of `qsmk` in the crude model and in the adjusted model. 
 Compare them.**
 
-# Question 3 (3 points): model diagnostics
+# Question 4 (3 points): model diagnostics
 
 Create a binned residual plot using the `binnedplot` function from the `arm` 
 library. Interpret the plot.
 
-# Question 4 (7 points): Inverse probability weighting
+# Question 5 (7 points): Inverse probability weighting
 
 a (2 points)) Create a model to calculate the propensity of exposure given the values of the 
 hypothesized confounders (propensity score). This is your "denominator" model of 
