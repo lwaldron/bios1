@@ -30,17 +30,11 @@ library(readr)
 nhefs <- read_csv("https://cdn1.sph.harvard.edu/wp-content/uploads/sites/1268/1268/20/nhefs.csv")
 ```
 
-# Question 1 (2 points): filter any censored or missing data
+# Question 1 (2 points): filter any missing data
 
-Remove all participants that were lost to follow-up or "censored", whose value 
-of the `cens` variable is 0. You would ordinarily want to perform a sensitivity 
-analysis and consider the possibility of bias from informative censoring, but 
-you can ignore that possibility for the purposes of this assignment.
-
-Also remove observations that are missing any of the following variables:
+Remove any observations that are missing any of the following variables:
 
 -   `death`
--   `cens`
 -   `active`
 -   `age`
 -   `education`
@@ -51,6 +45,10 @@ Also remove observations that are missing any of the following variables:
 -   `smokeintensity`
 -   `smkyrs`
 -   `wt82_71`
+
+You would ordinarily want to perform a sensitivity analysis and consider the 
+possibility of bias from informative censoring, but you can ignore that 
+possibility for the purposes of this assignment.
 
 # Question 2 (4 points): Table 1
 
