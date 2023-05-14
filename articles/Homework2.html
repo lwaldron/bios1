@@ -97,18 +97,12 @@ instructed in <a href="https://lwaldron.github.io/bios1/articles/Homework1.html"
 <span><span class="va">nhefs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">read_csv</a></span><span class="op">(</span><span class="st">"https://cdn1.sph.harvard.edu/wp-content/uploads/sites/1268/1268/20/nhefs.csv"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="question-1-2-points-filter-any-censored-or-missing-data">Question 1 (2 points): filter any censored or missing data<a class="anchor" aria-label="anchor" href="#question-1-2-points-filter-any-censored-or-missing-data"></a>
+<h2 id="question-1-2-points-filter-any-missing-data">Question 1 (2 points): filter any missing data<a class="anchor" aria-label="anchor" href="#question-1-2-points-filter-any-missing-data"></a>
 </h2>
-<p>Remove all participants that were lost to follow-up or “censored”,
-whose value of the <code>cens</code> variable is 0. You would ordinarily
-want to perform a sensitivity analysis and consider the possibility of
-bias from informative censoring, but you can ignore that possibility for
-the purposes of this assignment.</p>
-<p>Also remove observations that are missing any of the following
+<p>Remove any observations that are missing any of the following
 variables:</p>
 <ul>
 <li><code>death</code></li>
-<li><code>cens</code></li>
 <li><code>active</code></li>
 <li><code>age</code></li>
 <li><code>education</code></li>
@@ -120,6 +114,9 @@ variables:</p>
 <li><code>smkyrs</code></li>
 <li><code>wt82_71</code></li>
 </ul>
+<p>You would ordinarily want to perform a sensitivity analysis and
+consider the possibility of bias from informative censoring, but you can
+ignore that possibility for the purposes of this assignment.</p>
 </div>
 <div class="section level2">
 <h2 id="question-2-4-points-table-1">Question 2 (4 points): Table 1<a class="anchor" aria-label="anchor" href="#question-2-4-points-table-1"></a>
