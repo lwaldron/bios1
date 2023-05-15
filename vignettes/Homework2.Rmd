@@ -108,7 +108,8 @@ estimate the causal effect of quitting smoking on death.
 Notes:
 - the `id` argument to `geepack` is arbitrary in this case because there is no grouping or
 hierarchical structure of participants. You can use the `seqn` variable or `1:nrow(nhefs)`.
-- The `corstr` argument is also arbitrary for the same reason; use `corstr="unstructured"`
+- The `corstr` argument is also arbitrary for the same reason; if you don't specify
+it you will be using the default `corstr="independence"`
 - Remember that when using these weights, *do not* include confounders in the model.
 
 
