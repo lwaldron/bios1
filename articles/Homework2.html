@@ -173,9 +173,10 @@ effect of quitting smoking on death.</p>
 arbitrary in this case because there is no grouping or hierarchical
 structure of participants. You can use the <code>seqn</code> variable or
 <code>1:nrow(nhefs)</code>. - The <code>corstr</code> argument is also
-arbitrary for the same reason; use <code>corstr="unstructured"</code> -
-Remember that when using these weights, <em>do not</em> include
-confounders in the model.</p>
+arbitrary for the same reason; if you don’t specify it you will be using
+the default <code>corstr="independence"</code> - Remember that when
+using these weights, <em>do not</em> include confounders in the
+model.</p>
 <p>d (1 point)) Compare the coefficient and standard error for quitting
 smoking to Question 2, and comment. Recall the discussion in lecture
 about <code>geepack</code> standard errors being too conservative.</p>
